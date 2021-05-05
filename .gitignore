@@ -2,6 +2,7 @@
 node_modules
 dist
 src/assets/json/images
+src/assets/csv
 fonts
 utils/__pycache__
 utils/.ipynb_checkpoints
