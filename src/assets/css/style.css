@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+a:link { color: #000000; text-decoration: none; }
+a:visited { color: #000000; text-decoration: none; }
+a:active { color: #000000; text-decoration: none; }
+a:hover { text-decoration: none; }
+
+
+
+.title {
+  margin-top: 50px;
+  width: 300px;
+  position: absolute;
+  left: 8px;
+}
+
+.notes {
+  margin-top: 50px;
+  width: 300px;
+  position: absolute;
+  left: 1248px;
+  background-color: #909090;
+  color: #ffffff;
+}
+
+.summary {
+  margin-top: 50px;
+  width: 300px;
+  position: absolute;
+  left: 948px;
+}
+
+.imthumb {
+  margin-top: 50px;
+  width: 640px;
+  position: absolute;
+  left: 308px;
+  background-color: #909090;
+  color: #ffffff;
+}
+.thumb {
+  height: 300px;
+  width: 600px;
+  margin: 20px;
+}
+
+p {
+  height: 300px;
+  font-family: "Open Sans";
+  font-size: 12px;
+  margin: 20px;
+}
+
+.buttonStrip {
+  position: fixed;
+  z-index: 1;
+  top: 20px;
+  left: 20px;
+  display: inline-block;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+button, button:focus, button:active {
+  font-family: "Open Sans";
+  border-color: #212121;
+  color: #212121;
+  border-radius: 5px;
+  padding: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  outline: none;
+}
+
+span {
+  font-weight: bolder;
+  font-size: 18px;
+}
+
+span:hover {
+  color: #ffa500;
+}
+
+button:hover {
+  background-color: #ffa500 !important;
+}
