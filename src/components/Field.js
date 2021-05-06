@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { select } from 'd3-selection';
 
 const margin = {
-  top: 0,
+  top: 100,
   right: 0,
   bottom: 0,
   left: 0
@@ -99,21 +99,42 @@ class Field extends Component {
     select(svgNode)
       .select('g.plotCanvas')
       .selectAll('image')
-      .data(filteredData)
+      .data(slicedCoords)
       .enter()
       .append('image')
+      .attr('x', d => d.x * (rectSide + pad) )
+      .attr('y', d => d.y * (rectSide + pad) )
+
+    select(svgNode)
+      .select('g.plotCanvas')
+      .selectAll('image')
+      .data(filteredData)
       .attr('id', d => 't' + d.id + '_img')
       //.attr('xlink:href', d => "http://localhost:8888/" + d.imgpath )
       .attr('xlink:href', d => d.imgpath )
       .attr('width', rectSide )
       .attr('height', rectSide )
+      .on('mouseover', function(e, d) {
+        select(this).attr('width', rectSide * 1.1 );
+        select(this).attr('height', rectSide * 1.1 );
+        select('div.infoBox')
+          .append('p')
+          .attr('id', 'infoBox')
+          .text(d.id + ': ' + d.name)
+      })
+      .on('mouseout', function() {
+        select(this).attr('width', rectSide );
+        select(this).attr('height', rectSide );
+        select('#infoBox').remove()
+      })
+      .on('click', function(e, d) {
+        window.open(
+          d.link,
+          '_blank'
+        )
+      })
 
-    select(svgNode)
-      .select('g.plotCanvas')
-      .selectAll('image')
-      .data(slicedCoords)
-      .attr('x', d => d.x * (rectSide + pad) )
-      .attr('y', d => d.y * (rectSide + pad) )
+
 
     }
 
@@ -123,6 +144,8 @@ class Field extends Component {
         <div className='scrollBox'>
           <div className='navPanel'>
           </div>
+        </div>
+        <div className='infoBox'>
         </div>
         <div className='iconPanel'>
           <svg
