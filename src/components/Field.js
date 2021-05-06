@@ -21,13 +21,17 @@ class Field extends Component {
     super(props);
 
     this.state = {
-      plotH: 0
+      plotH: 0,
+      buttonIdx: null,
+      filteredData: null,
+      slicedCoords: null
     }
 
     this.drawSVG = this.drawSVG.bind(this);
-    this.filterData = this.filterData.bind(this);
+    this.filterByButton = this.filterByButton.bind(this);
     this.handlePlotH = this.handlePlotH.bind(this);
     this.drawImages = this.drawImages.bind(this);
+    this.filterByClick = this.filterByClick.bind(this);
     this.drawNav = this.drawNav.bind(this);
     this.svgNode = React.createRef();
   }
@@ -41,6 +45,11 @@ class Field extends Component {
     if (prevProps.data === null && prevProps.data !== this.props.data) {
       this.drawNav();
     }
+
+    if (prevState.filteredData !== this.state.filteredData) {
+      this.drawImages();
+    }
+
   }
 
   drawSVG() {
@@ -56,13 +65,30 @@ class Field extends Component {
 
     }
 
-  filterData(e, d) {
+  filterByButton(e, d) {
+
+    if ( this.state.buttonIdx!==null ) {
+      select('#t' + this.state.buttonIdx + '_button')
+        .style('color', '#424242')
+        .style('background-color', 'rgba(242,241,239,0.67)')
+    }
+
+    select('#t' + d.idx + '_button')
+      .style('background-color', '#424242')
+      .style('color', 'rgba(242,241,239,0.67)')
+
+    this.setState({ buttonIdx: d.idx })
+
     const filteredData = this.props.data.filter(item => item[d.col]===d.val);
     const n = filteredData.length;
+    this.handlePlotH(n);
     const slicedCoords = this.props.coords.slice(0,n);
 
-    this.handlePlotH(n);
-    this.drawImages(filteredData,slicedCoords);
+    this.setState({
+      filteredData: filteredData,
+      slicedCoords: slicedCoords
+    });
+
 
   }
 
@@ -81,12 +107,13 @@ class Field extends Component {
       .data(this.props.nav)
       .enter()
       .append('p')
+      .attr('id', d => 't' + d.idx + '_button')
       .text(d => d.buttonlabel)
-      .on('click', this.filterData )
+      .on('click', this.filterByButton )
 
       }
 
-  drawImages(filteredData,slicedCoords) {
+  drawImages() {
     const svgNode = this.svgNode.current;
 
     window.scrollTo(0,0);
@@ -99,7 +126,7 @@ class Field extends Component {
     select(svgNode)
       .select('g.plotCanvas')
       .selectAll('image')
-      .data(slicedCoords)
+      .data(this.state.slicedCoords)
       .enter()
       .append('image')
       .attr('x', d => d.x * (rectSide + pad) )
@@ -108,7 +135,7 @@ class Field extends Component {
     select(svgNode)
       .select('g.plotCanvas')
       .selectAll('image')
-      .data(filteredData)
+      .data(this.state.filteredData)
       .attr('id', d => 't' + d.id + '_img')
       //.attr('xlink:href', d => "http://localhost:8888/" + d.imgpath )
       .attr('xlink:href', d => d.imgpath )
@@ -127,16 +154,34 @@ class Field extends Component {
         select(this).attr('height', rectSide );
         select('#infoBox').remove()
       })
-      .on('click', function(e, d) {
-        window.open(
-          d.link,
-          '_blank'
-        )
-      })
+      .on('click', this.filterByClick )
+    }
 
+  filterByClick(e, d) {
+    if ( this.props.nnToggle===false ) {
 
+      window.open(d.link,'_blank')
+
+    } else {
+
+      select('#infoBox').remove()
+
+      const nnIdxs = this.props.nn[d.id];
+      // this ensures the items are still ordered by distance
+      const filteredData = nnIdxs.map(item => this.props.data.filter(obj => obj['id']===item)[0]);
+
+      const n = filteredData.length;
+      this.handlePlotH(n);
+
+      const slicedCoords = this.props.coords.slice(0,n);
+
+      this.setState({
+        filteredData: filteredData,
+        slicedCoords: slicedCoords
+      });
 
     }
+  }
 
   render() {
     return (

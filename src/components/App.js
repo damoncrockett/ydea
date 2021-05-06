@@ -9,12 +9,16 @@ class App extends Component {
     this.state = { // global state
       nav: null,
       data: null,
-
+      coords: null,
+      nn: null,
+      nnToggle: false
     };
 
     this.getNav = this.getNav.bind(this);
     this.getData = this.getData.bind(this);
     this.getCoords = this.getCoords.bind(this);
+    this.getNN = this.getNN.bind(this);
+    this.handleNN = this.handleNN.bind(this);
 
   }
 
@@ -39,22 +43,50 @@ class App extends Component {
       .then(data => this.setState({ coords: data }))
   }
 
+  getNN() {
+    //fetch('http://localhost:8888/nn.json')
+    fetch('nn.json')
+      .then(response => response.json())
+      .then(data => this.setState({ nn: data }))
+  }
+
+  handleNN() {
+    this.setState(state => ({
+      nnToggle: !this.state.nnToggle
+    }));
+  }
+
   componentDidMount() {
     this.getNav();
     this.getData();
     this.getCoords();
+    this.getNN();
   }
 
   render() {
 
+    const stroke = '#424242'; // dark
+    const bkgd = '#dddddd'; // light
+
+    const nnStyle = {
+      backgroundColor: this.state.nnToggle ? stroke : bkgd,
+      color: this.state.nnToggle ? bkgd : stroke
+    };
 
     return (
       <div className='app'>
-        <Field
-          nav={this.state.nav}
-          data={this.state.data}
-          coords={this.state.coords}
-        />
+        <div className='buttonStrip'>
+          <button onClick={this.handleNN} style={nnStyle}>NEAREST NEIGHBORS</button>
+        </div>
+        <div>
+          <Field
+            nav={this.state.nav}
+            data={this.state.data}
+            coords={this.state.coords}
+            nnToggle={this.state.nnToggle}
+            nn={this.state.nn}
+          />
+        </div>
       </div>
     );
   }

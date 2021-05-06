@@ -21,11 +21,11 @@ p {
   font-size: 24px;
   align: left;
   max-width: 150px;
+  border: 1px solid transparent
 }
 
 p:hover {
-  background-color: var(--panel-stroke);
-  color: rgba(242,241,239,0.67);
+  border-color: var(--panel-stroke);
 }
 
 .iconPanel {
@@ -59,4 +59,33 @@ p:hover {
 .scrollBox::-webkit-scrollbar { /* hides scrollbar in Safari + Chrome */
     width: 0;
     height: 0;
+}
+
+.buttonStrip {
+  position: fixed;
+  top: 10px;
+  left: 25vw;
+  display: inline-block;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+button, button:focus, button:active {
+  font-family: 'Roboto';
+  font-size: 24px;
+  border-color: var(--panel-stroke);
+  border-radius: 10px;
+  border-width: 1px;
+  border-style: solid;
+  padding: 6px;
+  margin-left: 2px;
+  margin-right: 2px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  outline: none;
+}
+
+button:hover {
+  border-color: #ffffff;
+  color: #ffffff !important;
 }
